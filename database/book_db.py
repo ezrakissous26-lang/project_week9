@@ -2,25 +2,14 @@ from db_connection import get_connection
 import mysql.connector
 
 
-tablebook = """
-    CREATE TABLE IF NOT EXISTS books (
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        title VARCHAR(100),
-        author VARCHAR(50),
-        genre VARCHAR(50),
-        is_available BOOL,
-        borrow_by_member_id,
-    )
-    """
-
-
-class BooksDB():
-    def create_book(data):
+class BooksDB:
+    def create_book(self, data: dict):  # need to come back and add verification for availability
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = "INSERT INTO books VALUES %s %s %s %s %s"
-        cur.execute(sql_command)
+        sql_command = "INSERT INTO books (title, author, genre) VALUES %s %s %s"
+        values = data.values()
+        cur.execute(sql_command, values)
         conn.commit()
 
         check = cur.rowcount()
@@ -30,19 +19,35 @@ class BooksDB():
 
         return check
 
-    def get_all_books():
+    def get_all_books(self):
         conn = get_connection()
-        cur = conn.cursor()
+        cur = conn.cursor(dictionary=True)
 
         sql_command = "SELECT * FROM books"
         cur.execute(sql_command)
-        conn.commit()
+
+        display = cur.fetchall()
 
         cur.close()
         conn.close()
-        pass
 
-    def get_book_by_id(id):
+        return display
+
+    def get_book_by_id(self, id: int):
+        conn = get_connection()
+        cur = conn.cursor(dictionary=True)
+
+        sql_command = "SELECT * FROM books WHERE id = %s"
+        cur.execute(sql_command, id)
+
+        display = cur.fetchone
+
+        cur.close()
+        conn.close()
+
+        return display
+
+    def update_book(self, id, data):
         conn = get_connection()
         cur = conn.cursor()
 
@@ -54,7 +59,7 @@ class BooksDB():
         conn.close()
         pass
 
-    def update_book(id, data):
+    def set_available(self, id, val, member_id):
         conn = get_connection()
         cur = conn.cursor()
 
@@ -66,74 +71,73 @@ class BooksDB():
         conn.close()
         pass
 
-    def set_available(id, val, member_id):
+    def count_total_books(self):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
+        sql_command = "SELECT COUNT(*) AS total FROM books"
         cur.execute(sql_command)
-        conn.commit()
+
+        result = cur.fetchone()
 
         cur.close()
         conn.close()
-        pass
 
-    def count_total_books():
+        return result["total"]
+
+    def count_available_books(self):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
+        sql_command = "SELECT COUNT(*) AS is_available FROM books WHERE is_available = TRUE"
         cur.execute(sql_command)
-        conn.commit()
+
+        result = cur.fetchone()
 
         cur.close()
         conn.close()
-        pass
 
-    def count_available_books():
+        return result["is_available"]
+
+    def count_borrowed_books(self):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
+        sql_command = "SELECT COUNT(*) AS not_available FROM books WHERE borrow_by_member_id IS NOT NULL"
         cur.execute(sql_command)
         conn.commit()
 
+        result = cur.fetchone()
+
         cur.close()
         conn.close()
-        pass
 
-    def count_borrowed_books():
+        return result["not_available"]
+
+    def count_by_genre(self, genre: str):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
-        conn.commit()
+        sql_command = "SELECT COUNT(*) AS %s FROM books WHERE genre = %s"
+        cur.execute(sql_command, genre, genre)
+
+        result = cur.fetchone()
 
         cur.close()
         conn.close()
-        pass
 
-    def count_by_genre(genre):
+        return result[genre]
+
+    def count_active_borrows_by_member(self, member_id):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
-        conn.commit()
+        sql_command = "SELECT COUNT(*) AS total_borrow WHERE is_available = FALSE FROM books WHERE id = %s"
+        cur.execute(sql_command, member_id)
+
+        result = cur.fetchone()
 
         cur.close()
         conn.close()
-        pass
 
-    def count_active_borrows_by_member(member_id):
-        conn = get_connection()
-        cur = conn.cursor()
-
-        sql_command = ""
-        cur.execute(sql_command)
-        conn.commit()
-
-        cur.close()
-        conn.close()
-        pass
+        return result["total_borrow"]

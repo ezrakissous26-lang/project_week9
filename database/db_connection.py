@@ -3,11 +3,11 @@ import mysql.connector
 
 def get_connection():
     conn = mysql.connector.connect(
-        host="",
-        port="",
-        user="",
-        password="",
-        database="",
+        host="localhost",
+        port="3306",
+        user="root",
+        password="1234",
+        database="librarydatabase",
 
     )
     print("Successfull connexion !")
@@ -18,22 +18,21 @@ def create_books_table():
     conn = get_connection()
     cur = conn.cursor()
 
-    sql_command = """
-    CREATE TABLE IF NOT EXISTS books (
+    sql_command = """CREATE TABLE IF NOT EXISTS books (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        title VARCHAR(100),
-        author VARCHAR(50),
-        genre VARCHAR(50),
-        is_available BOOL,
+        title VARCHAR(100) NOT NULL,
+        author VARCHAR(50) NOT NULL,
+        genre ENUM ('Fiction', 'Non-fiction', 'Science', 'History', 'Other') NOT NULL,
+        is_available BOOL DEFAULT TRUE NOT NULL,
         borrow_by_member_id INT
     )
     """
+
     cur.execute(sql_command)
     conn.commit()
 
     cur.close()
     conn.close()
-    pass
 
 
 def create_members_table():
@@ -54,4 +53,3 @@ def create_members_table():
 
     cur.close()
     conn.close()
-    pass

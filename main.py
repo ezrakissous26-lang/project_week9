@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-import db_connection
-
+from database import db_connection
 
 app = FastAPI()
 
