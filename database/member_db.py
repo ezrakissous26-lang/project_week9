@@ -70,25 +70,32 @@ class MembersDB():  # 1
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
+        sql_command = "UPDATE members SET is_active = TRUE WHERE id = %s"
+        cur.execute(sql_command, (id,))
         conn.commit()
+
+        check = cur.rowcount > 0
 
         cur.close()
         conn.close()
-        pass
+
+        return check
 
     def deactivate_member(self, id):  # 6
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
+        sql_command = "UPDATE members SET is_active = FALSE WHERE id = %s"
+        cur.execute(sql_command, (id,))
         conn.commit()
+
+        check = cur.rowcount > 0
 
         cur.close()
         conn.close()
-        pass
+
+        return check
+
 
     def increment_borrows(self, id):  # 7
         conn = get_connection()

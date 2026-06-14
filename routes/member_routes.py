@@ -34,8 +34,17 @@ def loc_update_member(id: int, data: dict):
     return {"message": "Updating successfully."}
 
 
-'''@router.patch('/members/{id}/deactivate')
-pass
+@router.patch('/members/{id}/deactivate')
+def loc_deactivate_member(id: int):
+    result = db_members.deactivate_member(id)
+    if not result:
+        raise HTTPException(status_code=404, detail=f"{id} not found.")
+    return {"message": f"member {id} deactivate successfully"}
+
 
 @router.patch('/members/{id}/activate')
-pass'''
+def loc_activate_member(id: int):
+    result = db_members.activate_member(id)
+    if not result:
+        raise HTTPException(status_code=404, detail=f"{id} not found.")
+    return {"message": f"member {id} activate successfully"}
