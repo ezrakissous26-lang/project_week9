@@ -12,11 +12,13 @@ def loc_create_book(data: dict):
     return {"message": "Book created successfully", "rows_affected": result}
 
 
-'''@router.get('/books')
+@router.get('/books')
 def loc_get_all_books():
-    db_books.get_all_books()
+    result = db_books.get_all_books()
+    return {"message": "all books displayed successfully", "all books":  result}
 
-@router.get('/books/{id}')
+
+'''@router.get('/books/{id}')
 def loc_get_book_by_id():
     db_books.get_book_by_id()
 
