@@ -28,12 +28,15 @@ def loc_get_book_by_id(id: int):
     return {"message": "one book displayed succssefully", "one_book": result}
 
 
-'''@router.patch('/books/{id}')
-def loc_update_book():
-    db_books.update_book()
+@router.patch('/books/{id}')
+def loc_update_book(id: int, data: dict):
+    result = db_books.update_book(id, data)
+    if not result:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return {"message": "Book updated successfully"}
 
 
-@router.patch('/books/{id}/borrow/{member_id} ')
+'''@router.patch('/books/{id}/borrow/{member_id} ')
 
 
 @router.patch('/books/{id}/return/{member_id} ')'''
