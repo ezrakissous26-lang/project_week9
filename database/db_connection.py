@@ -20,9 +20,9 @@ def create_books_table():
 
     sql_command = """CREATE TABLE IF NOT EXISTS books (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        title VARCHAR(100) NOT NULL,
+        title VARCHAR(50) NOT NULL,
         author VARCHAR(50) NOT NULL,
-        genre ENUM ('Fiction', 'Non-fiction', 'Science', 'History', 'Other') NOT NULL,
+        genre ENUM ('Fiction', 'Non-Fiction', 'Science', 'History', 'Other') NOT NULL,
         is_available BOOL DEFAULT TRUE NOT NULL,
         borrowed_by_member_id INT
     )
@@ -42,10 +42,10 @@ def create_members_table():
     sql_command = """
     CREATE TABLE IF NOT EXISTS members (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        email VARCHAR(100),
-        name VARCHAR(50),
-        is_active BOOL,
-        total_borrows INT
+        email VARCHAR(100) NOT NULL UNIQUE,
+        name VARCHAR(100) NOT NULL,
+        is_active BOOL NOT NULL DEFAULT TRUE,
+        total_borrows INT NOT NULL DEFAULT 0
     )
     """
     cur.execute(sql_command)

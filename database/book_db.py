@@ -1,4 +1,4 @@
-from db_connection import get_connection
+from database.db_connection import get_connection
 
 
 class BooksDB:
@@ -70,7 +70,7 @@ class BooksDB:
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = "UPDATE books SET is_available = %s, borrow_by_member_id = %s WHERE id = %s"
+        sql_command = "UPDATE books SET is_available = %s, borrowed_by_member_id = %s WHERE id = %s"
         values = (val, member_id, id)
         cur.execute(sql_command, values)
         conn.commit()
@@ -151,3 +151,13 @@ class BooksDB:
         conn.close()
 
         return result["total_borrow"]
+
+
+'''
+try:
+    pass
+except Exception as e:
+    print(e)
+finally:
+    cur.close()
+'''
