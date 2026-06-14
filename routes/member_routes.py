@@ -12,10 +12,13 @@ def loc_create_member(data: dict):
     return {"meesage": f"Creating members {result} successfully."}
 
 
-'''@router.get('/members')
-pass
+@router.get('/members')
+def loc_get_all_members():
+    result = db_members.get_all_members()
+    return {"message": f"Successful displayed {result}"}
 
-@router.get('/members/{id}')
+
+'''@router.get('/members/{id}')
 pass
 
 @router.patch('/members/{id}')
