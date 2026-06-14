@@ -1,23 +1,33 @@
 from db_connection import get_connection
 import mysql.connector
 
+"""CREATE TABLE IF NOT EXISTS books (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        title VARCHAR(100) NOT NULL,
+        author VARCHAR(50) NOT NULL,
+        genre ENUM ('Fiction', 'Non-fiction', 'Science', 'History', 'Other') NOT NULL,
+        is_available BOOL DEFAULT TRUE NOT NULL,
+        borrow_by_member_id INT
+    )
+    """
+
 
 class BooksDB:
-    def create_book(self, data: dict):  # need to come back and add verification for availability
+    def create_book(self, data: dict):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = "INSERT INTO books (title, author, genre) VALUES %s %s %s"
-        values = data.values()
+        sql_command = "INSERT INTO books (title, author, genre) VALUES (%s, %s, %s)"
+        values = list(data.values())
         cur.execute(sql_command, values)
         conn.commit()
 
-        check = cur.rowcount()
+        result = cur.rowcount
 
         cur.close()
         conn.close()
 
-        return check
+        return result
 
     def get_all_books(self):
         conn = get_connection()
@@ -47,29 +57,41 @@ class BooksDB:
 
         return display
 
-    def update_book(self, id, data):
+    def update_book(self, id: int, data: dict):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
+        set_parts = [f"{key} = %s" for key in data.keys()]
+        set_clause = " ,".join(set_parts)
+
+        sql_command = f"UPDATE books SET {set_clause} WHERE id = %s"
+        values = list(data.values()) + [id]
+
+        cur.execute(sql_command, values)
         conn.commit()
+
+        check = cur.rowcount > 0
 
         cur.close()
         conn.close()
-        pass
 
-    def set_available(self, id, val, member_id):
+        return check
+
+    def set_available(self, id: int, val: bool, member_id: int):
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
+        sql_command = "UPDATE books SET is_available = %s borrow_by_member_id = %s WHERE id = %s"
+        values = (val, member_id, id)
+        cur.execute(sql_command, values)
         conn.commit()
+
+        check = cur.rowcount > 0
 
         cur.close()
         conn.close()
-        pass
+
+        return check
 
     def count_total_books(self):
         conn = get_connection()
@@ -132,8 +154,8 @@ class BooksDB:
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = "SELECT COUNT(*) AS total_borrow WHERE is_available = FALSE FROM books WHERE id = %s"
-        cur.execute(sql_command, member_id)
+        sql_command = "SELECT COUNT(*) AS total_borrow FROM books WHERE borrow_by_member_id = %s"
+        cur.execute(sql_command, (member_id,))
 
         result = cur.fetchone()
 
