@@ -2,11 +2,14 @@ from fastapi import FastAPI
 import uvicorn
 from database import db_connection
 from routes import book_routes
+from routes import member_routes
 
 
 app = FastAPI()
 
 app.include_router(book_routes.router)
+app.include_router(member_routes.router)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True)
