@@ -48,9 +48,9 @@ class BooksDB:
         cur = conn.cursor(dictionary=True)
 
         sql_command = "SELECT * FROM books WHERE id = %s"
-        cur.execute(sql_command, id)
+        cur.execute(sql_command, (id,))
 
-        display = cur.fetchone
+        display = cur.fetchone()
 
         cur.close()
         conn.close()
