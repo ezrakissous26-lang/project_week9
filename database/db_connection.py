@@ -25,7 +25,7 @@ def create_books_table():
         author VARCHAR(50),
         genre VARCHAR(50),
         is_available BOOL,
-        borrow_by_member_id,
+        borrow_by_member_id INT
     )
     """
     cur.execute(sql_command)
@@ -46,7 +46,7 @@ def create_members_table():
         email VARCHAR(100),
         name VARCHAR(50),
         is_active BOOL,
-        total_borrows int,
+        total_borrows INT
     )
     """
     cur.execute(sql_command)
