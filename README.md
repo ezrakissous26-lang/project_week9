@@ -149,7 +149,7 @@ Project
         └── get_top_member()
 ```
 
-# REGLES D'EXECUTIONS
+# EXECUTIONS RULES
 ## 2. Docker installation
 
 `Create container`
