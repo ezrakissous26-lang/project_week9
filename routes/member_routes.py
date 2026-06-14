@@ -18,10 +18,14 @@ def loc_get_all_members():
     return {"message": f"Successful displayed {result}"}
 
 
-'''@router.get('/members/{id}')
-pass
+@router.get('/members/{id}')
+def loc_get_member_by_id(id: int):
+    result = db_members.get_member_by_id(id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="detail not found")
+    return {"message": f"Successful displayed {result}"}
 
-@router.patch('/members/{id}')
+'''@router.patch('/members/{id}')
 pass
 
 @router.patch('/members/{id}/deactivate')

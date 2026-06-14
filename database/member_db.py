@@ -37,13 +37,15 @@ class MembersDB():  # 1
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
-        conn.commit()
+        sql_command = "SELECT * FROM members WHERE id = %s"
+        cur.execute(sql_command, (id,))
+
+        result = cur.fetchone()
 
         cur.close()
         conn.close()
-        pass
+
+        return result
 
     def update_member(self, id, data):  # 4
         conn = get_connection()
