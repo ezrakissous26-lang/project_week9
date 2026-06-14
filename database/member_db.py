@@ -47,17 +47,24 @@ class MembersDB():  # 1
 
         return result
 
-    def update_member(self, id, data):  # 4
+    def update_member(self, id: int, data: dict):  # 4
         conn = get_connection()
         cur = conn.cursor()
 
-        sql_command = ""
-        cur.execute(sql_command)
+        set_parts = [f"{key} = %s" for key in data.keys()]
+        set_clause = ", ".join(set_parts)
+
+        sql_command = f"UPDATE members SET {set_clause} WHERE id = %s"
+        values = list(data.values()) + [id]
+        cur.execute(sql_command, values)
         conn.commit()
+
+        check = cur.rowcount > 0
 
         cur.close()
         conn.close()
-        pass
+
+        return check
 
     def activate_member(self, id):  # 5
         conn = get_connection()

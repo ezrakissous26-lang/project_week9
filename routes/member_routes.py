@@ -25,10 +25,16 @@ def loc_get_member_by_id(id: int):
         raise HTTPException(status_code=404, detail="detail not found")
     return {"message": f"Successful displayed {result}"}
 
-'''@router.patch('/members/{id}')
-pass
 
-@router.patch('/members/{id}/deactivate')
+@router.patch('/members/{id}')
+def loc_update_member(id: int, data: dict):
+    result = db_members.update_member(id, data)
+    if not result:
+        raise HTTPException(status_code=404, detail="invalid input")
+    return {"message": "Updating successfully."}
+
+
+'''@router.patch('/members/{id}/deactivate')
 pass
 
 @router.patch('/members/{id}/activate')
