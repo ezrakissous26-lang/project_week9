@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from database.book_db import BooksDB
 
 router = APIRouter()
@@ -15,14 +15,20 @@ def loc_create_book(data: dict):
 @router.get('/books')
 def loc_get_all_books():
     result = db_books.get_all_books()
-    return {"message": "all books displayed successfully", "all books":  result}
+    return {"message": "all books displayed successfully", "all_books": result}
 
 
-'''@router.get('/books/{id}')
-def loc_get_book_by_id():
-    db_books.get_book_by_id()
+@router.get('/books/{id}')
+def loc_get_book_by_id(id: int):
+    result = db_books.get_book_by_id(id)
 
-@router.patch('/books/{id}')
+    if result is None:
+        raise HTTPException(status_code=404, detail="Book not found.")
+
+    return {"message": "one book displayed succssefully", "one_book": result}
+
+
+'''@router.patch('/books/{id}')
 def loc_update_book():
     db_books.update_book()
 
