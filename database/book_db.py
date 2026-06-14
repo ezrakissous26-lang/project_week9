@@ -114,7 +114,7 @@ class BooksDB:
         conn = get_connection()
         cur = conn.cursor(dictionary=True)
 
-        sql_command = "SELECT COUNT(*) AS total FROM books WHERE borrow_by_member_id IS NOT NULL"
+        sql_command = "SELECT COUNT(*) AS total FROM books WHERE borrowed_by_member_id IS NOT NULL"
         cur.execute(sql_command)
 
         result = cur.fetchone()
@@ -142,7 +142,7 @@ class BooksDB:
         conn = get_connection()
         cur = conn.cursor(dictionary=True)
 
-        sql_command = "SELECT COUNT(*) AS total_borrow FROM books WHERE borrow_by_member_id = %s"
+        sql_command = "SELECT COUNT(*) AS total_borrow FROM books WHERE borrowed_by_member_id = %s"
         cur.execute(sql_command, (member_id,))
 
         result = cur.fetchone()
